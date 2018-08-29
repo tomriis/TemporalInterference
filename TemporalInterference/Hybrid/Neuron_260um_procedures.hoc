@@ -1,0 +1,201 @@
+// === PROCEDURES === //
+
+proc init() {
+	t=0
+	tstart = 0
+	tstop = 0
+	dt = dt0
+
+	spike = 0
+
+	T_STOP = length0 + length1 + length2 + length3 + length4
+	Tspike = T_STOP
+
+	finitialize(v_init)	// set all state variables
+	fcurrent()
+
+	forall{el_hh = (ina + ik + gl_hh*v_init)/gl_hh}
+	
+	V_soma = soma[0].v(0.5)
+	V_soma_prec = V_soma
+}
+
+proc init_dicho() {
+	intensity_low_unknown = 1
+	intensity_high_unknown = 1
+	if (intensity == 0) {intensity = 2}
+	goon = 1
+}
+
+proc run1() {
+	if (dichotomie == 0) {	// STIMULATION PROTOCOLE WITHOUT DICHOTOMY
+		run2()
+	} else {			// STIMULATION PROTOCOLE WITH DICHOTOMY
+		init_dicho()
+		while (goon == 1) {
+			run2()
+			dichotomy()
+		}
+	}
+}
+
+proc run2() {
+	// (-2) Initialisation
+	init()
+
+	// (-1) Insert extracellular
+	intensity0 = intensity0_def*intensity
+	intensity1 = intensity1_def*intensity
+	intensity2 = intensity2_def*intensity
+	intensity3 = intensity3_def*intensity
+	intensity4 = intensity4_def*intensity
+	
+	// (0) Phase 0 : delai
+	tstart=tstop
+	tstop=tstop+length0
+	if(tstop>tstart) {run3(intensity0,tstart,tstop)}
+
+	// (1) Phase 1 : creneau < 0
+	tstart=tstop
+	tstop=tstop+length1
+	if(tstop>tstart) {run3(intensity1,tstart,tstop)}
+
+	// (2) Phase 2 : delai entre les 2 creneaux
+	tstart=tstop
+	tstop=tstop+length2
+	if(tstop>tstart) {run3(intensity2,tstart,tstop)}
+
+	// (3) Phase 3 : creneau > 0
+	tstart=tstop
+	tstop=tstop+length3
+	if(tstop>tstart) {run3(intensity3,tstart,tstop)}
+
+	// (4) Phase 4 : fin de la stimulation
+	tstart=tstop
+	tstop=tstop+length4
+	if(tstop>tstart) {run3(intensity4,tstart,tstop)}
+}
+
+proc run3() {local inte, tstart, tstop
+	inte = $1
+	tstart = $2
+	tstop = $3
+	insert_extracellular(inte)
+	advance(tstart,tstop)
+}
+
+proc advance() {local tstart, tstop
+	tstop = $2
+	while (t < tstop) {
+		fadvance()
+		V_soma_prec_prec = V_soma_prec
+		V_soma_prec = V_soma
+		V_soma = soma[0].v(0.5)
+
+		if(writefile == 1 && t == time2) {
+			// f1.printf("%f\t%f\n",t,V_soma)
+			for(k=0; k<naxon; k=k+1) {
+				f1.printf("%f\t%f\t%f\n", axon[naxon-(k+1)].v(0.5), axon[naxon-(k+1)].vext[0], axon[naxon-(k+1)].vext[1])
+			}
+			for(k=0; k<nsoma; k=k+1) {
+				f1.printf("%f\t%f\t%f\n", soma[k].v(0.5), soma[k].vext[0], soma[k].vext[1])
+			}
+			for(k=0; k<ndendrite; k=k+1) {
+				f1.printf("%f\t%f\t%f\n", dendrite[k].v(0.5), dendrite[k].vext[0], dendrite[k].vext[1])
+			}
+
+		}
+
+		// if (V_soma_prec > SDT && V_soma_prec > V_soma) {
+		if (V_soma_prec > SDT && V_soma_prec > V_soma && V_soma_prec > V_soma_prec_prec && t > length0+length1+length2+length3) {
+// && t > length0+length1+length2+length3) {
+			spike = 1
+			Tspike = t
+			Tspike_high = t
+		}
+
+		if (spike && displayall == 0) {
+			t = tstop
+		}
+	}
+}
+
+proc dichotomy() {
+
+	print "intensity = ",intensity
+	print "tspike = ",Tspike
+	print ""
+	
+	if (intensity_low_unknown == 0 && intensity_high_unknown == 0) {
+		if (spike) {
+			// intensity_low UNCHANGED
+			intensity_high = intensity
+			intensity = (intensity+intensity_low)/2
+		} else {
+			intensity_low = intensity
+			// intensity_high UNCHANGED
+			if (intensity < 0) {
+				intensity = (intensity+intensity_high)/2
+			} else {
+				intensity = (intensity+intensity_high)/2
+			}
+		}
+	} else { 									// Case where we don't know the lower and the upper limits
+		if (spike) {
+			intensity_high = intensity
+			intensity_high_unknown = 0
+			if (intensity_low_unknown == 1) {
+				intensity = intensity/2
+			} else {
+				intensity = (intensity+intensity_low)/2
+			}
+		} else {
+			intensity_low = intensity
+			intensity_low_unknown = 0
+			if (intensity_high_unknown) {
+				intensity = intensity*2
+				// Case where we don't manage to make a spike
+				if (intensity > 1e10) {
+					intensity_high = 1e10+1
+					intensity_low = 1e10-1
+					intensity_high_unknown = 0
+					intensity_low_unknown = 0
+				}
+			} else {
+				if (intensity < 0) {
+					intensity = (intensity+intensity_high)/2
+				} else {
+					intensity = (intensity+intensity_high)/2
+				}
+			}
+		}
+	}
+
+	if(intensity >= 1e+10) {
+		intensity_high = intensity+1
+		intensity_low = intensity-1
+		intensity_low_unknown =0
+		intensity_high_unknown = 0
+	}
+
+	if (abs(intensity_high-intensity_low)/intensity_high < 0.001 && intensity_low_unknown == 0 && intensity_high_unknown == 0) {
+		goon = 0
+		print intensity_high
+		print Tspike_high
+		//print "intensity_threshold = ",intensity_high
+		//Thresholds_file.printf("%f\t%f\t%f\t%f\t%f\n",x_soma.x[kk],y_soma,z_soma,intensity_high,Tspike_high)
+		Thresholds_file.printf("%f\t%f\n", intensity_high, Tspike_high)
+
+		intensity = intensity_high
+		
+		// dichotomie = 0
+		// displayall = 1
+		// run1()
+		// writefile = 1
+		// f1.wopen("file1.txt") //open file1 for writing
+		// run1()
+
+		//dichotomie = 1
+		//displayall = 0
+	}
+}

@@ -1,0 +1,19 @@
+// DEFINE INITIAL PARAMETERS //
+
+
+
+intensity = 1
+intensity_low = 0
+intensity_high = 2
+dichotomie = 0
+SDT = -20 // seuil de detection
+displayall = 0
+dt0 = 0.01
+
+writefile = 1
+
+objref f1
+f1 = new File()
+f1.wopen("file1.txt") // open file1 for writing
+
+access soma[0]

@@ -1,0 +1,10 @@
+objref Thresholds_file
+Thresholds_file = new File()
+Thresholds_file.aopen("HybridApproach_thresholds.txt")
+xopen("Neuron_260um_Geometry.hoc")
+xopen("Neuron_260um_passive.hoc")
+xopen("HybridApproach_x_0050_y0050_z0050.hoc")
+xopen("Neuron_260um_initial_parameters_CA.hoc")
+xopen("Neuron_260um_procedures.hoc")
+run1()
+Thresholds_file.close()
