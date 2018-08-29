@@ -1,12 +1,12 @@
 // Extracellular potential
 objref a
-objref f1
+objref fil
 proc insert_electracellular() { strdef filename
      filename = $s1
-     f1 = new File()
-     f1.ropen(filename)
+     fil = new File()
+     fil.ropen(filename)
      a = new Vector()
-     a.scanf(f1)
+     a.scanf(fil)
      
      forall {
      	    i = int(n3d()/2)
