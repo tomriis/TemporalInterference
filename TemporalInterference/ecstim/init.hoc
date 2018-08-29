@@ -1,0 +1,5 @@
+load_file("nrngui.hoc")
+load_file("toymodel.hoc")
+load_file("rig.ses")
+load_file("stim.hoc")
+load_file("plot_e_extra.ses")

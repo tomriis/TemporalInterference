@@ -26,23 +26,25 @@ proc run1() {
 	
 	// (0) Phase 0 : delai
 	tstop = 10
-	run2(0,10)
+	run2(0,30)
 
 }
 
 proc run2() {local tstart, tstop
 	tstart = $1
 	tstop = $2
-	strdef data_prefix,b
-	data_prefix = "./field_data/test_field_"
-	i = 0
+	strdef data_prefix, c
+	data_prefix = "./field_data/testfield_"
+	j = 0
+	print j, "to start----------"
 	while (t< tstop){
+	      j += 1
+	      j = j%9
 	      print t, "   ", c
-	      sprint(c,"%s%d.txt",data_prefix,i)
+	      sprint(c,"%s%d.txt",data_prefix,j)
 	      insert_extracellular(c)
-	      f_advance()
-	      i = i + 1
-	      i = i%9
+	      f1.printf("%f\t%f\t%f\t%f\n",t, soma[0].v(0.5), soma[0].vext[0], soma[0].vext[1])
+	      fadvance()
 	}
 	      
 }

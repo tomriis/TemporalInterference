@@ -1,7 +1,7 @@
 // Extracellular potential
 objref a
 objref fil
-proc insert_electracellular() { strdef filename
+proc insert_extracellular() { strdef filename
      filename = $s1
      fil = new File()
      fil.ropen(filename)
