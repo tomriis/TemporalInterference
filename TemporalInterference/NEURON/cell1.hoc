@@ -1,0 +1,48 @@
+create soma, axon, p_dend[1], d_dend[1]
+
+    proc init() {
+    	 create soma, axon, p_dend[2], d_dend[4]
+	 soma {
+	      L = 20
+	      nseg = 1
+	      diam = 20
+	      insert hh
+	      }
+	  axon {
+	      L = 1000
+	      nseg = 1001
+	      diam = 5
+	      insert hh
+	      }
+	  forsec "p_dend" {
+	      L = 200
+	      nseg = 201
+	      diam(0:1) = 2:1
+	      insert pas
+	      e_pas = -65
+	      }
+	  forsec "d_dend" {
+	      L = 100
+	      nseg = 101
+	      diam(0:1) = 1:0.2
+	      insert pas
+	      e_pas = -65
+	      }
+//Connecting all the sections together
+//-- Axon to Soma
+     	  connect axon(1), soma(0)
+//-- Primary Dendrites to Soma
+     	  for i = 0, 1 {
+	      connect p_dend[i](0), soma(1)
+	  }
+//-- Secondary Dendrites to Primary Dendrites
+     	   for i = 0, 1 {
+	       connect d_dend[i*2](0), p_dend[i](1)
+	       connect d_dend[(i*2)+1](0), p_dend[i](1)
+	   }
+	   forall {
+	   insert extracellular
+	   }
+    }
+
+init()

@@ -34,14 +34,12 @@ pvec.printf
 */
 // drive e_extracellular at each internal node of the model
 // with a voltage that has the time course specified by pvec, tvec
-
-forall insert extracellular
-
 objref veclist  // will hold all the stim Vectors
 
 proc setstim() { localobj tmpvec
   veclist = new List()
   forall {
+    print secname()
     for (x, 0) {  // iterate over internal nodes only
       // specify the time course of extracellular potential at this location
       // for this toy example, something very simple:
