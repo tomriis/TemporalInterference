@@ -1,7 +1,0 @@
-// Extracellular Potential
-
-proc insert_extracellular(){local filename
-
-     forall {
-       	    for(x) e_extracellular(x) = V_nn(x3d(x)
-	    }
