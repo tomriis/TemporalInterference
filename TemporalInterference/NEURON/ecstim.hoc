@@ -1,0 +1,58 @@
+// create the basic stimulus time course
+objref tvec, pvec
+// tvec will hold the stimulus sample times
+// pvec will be a 1 ms pulse of with amplitude PMAX
+NUMPTS = 5
+tvec = new Vector(NUMPTS)
+pvec = new Vector(NUMPTS)
+PMAX = 40  // found by trial and error to elicit a spike
+{ tvec.x[0]=0   pvec.x[0]=0 }  // field is 0 for 1 ms 
+{ tvec.x[1]=1   pvec.x[1]=0 }
+{ tvec.x[2]=1   pvec.x[2]=PMAX }  // jumps to some value
+{ tvec.x[3]=2   pvec.x[3]=PMAX }  //   for 1 ms
+{ tvec.x[4]=2   pvec.x[4]=0 }  // falls back to 0 ever after
+
+objref tvec, pvec
+// tvec will hold the stimulus sample times
+// pvec will be a 1 ms pulse of with amplitude PMAX
+objref ff, fpvec
+ff = new File()
+fpvec = new File()
+ff.ropen("tvec30ms.txt")
+fpvec.ropen("300pvec.txt")
+tvec = new Vector()
+tvec.scanf(ff)
+pvec = new Vector()
+pvec.scanf(fpvec)
+/*
+print " "
+print "tvec --------------"
+tvec.printf
+print " "
+print "pvec --------------"
+pvec.printf
+*/
+// drive e_extracellular at each internal node of the model
+// with a voltage that has the time course specified by pvec, tvec
+
+forall insert extracellular
+
+objref veclist  // will hold all the stim Vectors
+
+proc setstim() { localobj tmpvec
+  veclist = new List()
+  forall {
+    for (x, 0) {  // iterate over internal nodes only
+      // specify the time course of extracellular potential at this location
+      // for this toy example, something very simple:
+      tmpvec = pvec.c
+      tmpvec.mul(1-x)  // potential falls off with distance from 0 end
+      // could just as well have read values from a file
+      // or copied a column from a matrix into tmpvec
+      tmpvec.play(&e_extracellular(x), tvec)
+      veclist.append(tmpvec)
+    }
+  }
+}
+
+setstim()
