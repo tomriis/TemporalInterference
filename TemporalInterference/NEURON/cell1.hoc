@@ -1,6 +1,6 @@
-create soma, axon//,  p_dend[2], d_dend[4]
+create soma, axon,  p_dend[2], d_dend[4]
 connect axon(0), soma(0)
-/*//-- Primary Dendrites to Soma
+//-- Primary Dendrites to Soma
      	  for i = 0, 1 {
 	      connect p_dend[i](0), soma(1)
 	  }
@@ -9,7 +9,6 @@ connect axon(0), soma(0)
 	       connect d_dend[i*2](0), p_dend[i](1)
 	       connect d_dend[(i*2)+1](0), p_dend[i](1)
 	   }
-  */
 
 
 soma {
@@ -24,11 +23,11 @@ axon {
 nseg = 21
 // NTC
 nseg = 21*5
-L = 1000
-diam = 1
+L = 10000
+diam = 10
 insert hh
 }
-/*
+
 forsec "p_dend" {
 	      L = 200
 	      nseg = 201
@@ -43,8 +42,8 @@ forsec "d_dend" {
 	      insert pas
 	      e_pas = -65
 }
-*/
-/*
+
+
 forall {
    Ra=100
    cm=1
@@ -54,7 +53,7 @@ forall {
 //   e_pas=-65
    //e_pas = 0  // make it easy to see field-induced effects on membrane potential
 }
-*/
+
 access axon
 
 
