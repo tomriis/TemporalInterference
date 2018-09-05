@@ -1,4 +1,0 @@
-load_file("nrngui.hoc")
-load_file("toymodel.hoc")
-load_file("setup.ses")
-load_file("ecstim.hoc")

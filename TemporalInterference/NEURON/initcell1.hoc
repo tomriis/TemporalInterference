@@ -1,0 +1,4 @@
+load_file("nrngui.hoc")
+load_file("cell1.hoc")
+load_file("setup_cell1.ses")
+load_file("ecstim_cell1.hoc")

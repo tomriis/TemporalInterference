@@ -19,11 +19,12 @@ objref ff, fpvec
 ff = new File()
 fpvec = new File()
 ff.ropen("tvec30ms.txt")
-fpvec.ropen("300pvec.txt")
+fpvec.ropen("3KHzCarrier300env.txt")
 tvec = new Vector()
 tvec.scanf(ff)
 pvec = new Vector()
 pvec.scanf(fpvec)
+
 /*
 print " "
 print "tvec --------------"
@@ -46,7 +47,7 @@ proc setstim() { localobj tmpvec
       // specify the time course of extracellular potential at this location
       // for this toy example, something very simple:
       tmpvec = pvec.c
-      tmpvec.mul(1-x)  // potential falls off with distance from 0 end
+      tmpvec.mul(1-x)
       // could just as well have read values from a file
       // or copied a column from a matrix into tmpvec
       tmpvec.play(&e_extracellular(x), tvec)
