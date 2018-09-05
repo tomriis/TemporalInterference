@@ -19,7 +19,7 @@ objref ff, fpvec
 ff = new File()
 fpvec = new File()
 ff.ropen("tvec30ms.txt")
-fpvec.ropen("300pvec.txt")
+fpvec.ropen("3KHzCarrier300env.txt")
 tvec = new Vector()
 tvec.scanf(ff)
 pvec = new Vector()
