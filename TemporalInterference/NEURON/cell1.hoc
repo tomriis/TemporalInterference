@@ -12,35 +12,36 @@ connect axon(0), soma(0)
 
 
 soma {
-nseg = 1
-L = 50
-diam = 50
-insert hh
+     nseg = 1
+     L = 50
+     diam = 50
+     insert hh
 }
 
 
 axon {
-nseg = 21
-// NTC
-nseg = 21*5
-L = 10000
-diam = 10
-insert hh
+     nseg = 21
+     // NTC
+     //nseg = 21*5
+     L = 1000
+     diam = 1
+     insert hh
 }
 
 forsec "p_dend" {
-	      L = 200
-	      nseg = 201
-	      diam(0:1) = 2:1
-	      insert pas
-	      e_pas = -65
-	      }
+     L = 200
+     nseg = 201
+     diam(0:1) = 2:1
+     insert pas
+     e_pas = -65
+}
+
 forsec "d_dend" {
-	      L = 100
-	      nseg = 101
-	      diam(0:1) = 1:0.2
-	      insert pas
-	      e_pas = -65
+     L = 100
+     nseg = 101
+     diam(0:1) = 1:0.2
+     insert pas
+     e_pas = -65
 }
 
 

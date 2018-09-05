@@ -1,26 +1,17 @@
 {load_file("nrngui.hoc")}
 objectvar save_window_, rvp_
-objectvar scene_vector_[5]
+objectvar scene_vector_[6]
 objectvar ocbox_, ocbox_list_, scene_, scene_list_
 {ocbox_list_ = new List()  scene_list_ = new List()}
 {pwman_place(0,0,0)}
 {
 save_window_ = new PlotShape(0)
-save_window_.size(-948.967,250.783,-457.77,457.77)
+save_window_.size(-948.969,250.785,-688.017,688.017)
 save_window_.variable("v")
 scene_vector_[2] = save_window_
-{save_window_.view(-948.967, -457.77, 1199.75, 915.54, 488, 489, 341.76, 260.8)}
+{save_window_.view(-948.969, -688.017, 1199.75, 1376.03, 1102, 0, 291.84, 334.72)}
 fast_flush_list.append(save_window_)
 save_window_.save_name("fast_flush_list.")
-}
-{
-save_window_ = new Graph(0)
-save_window_.size(0,30,-80,40)
-scene_vector_[3] = save_window_
-{save_window_.view(0, -80, 30, 120, 834, 0, 576, 341.44)}
-graphList[0].append(save_window_)
-save_window_.save_name("graphList[0].")
-save_window_.addexpr("v(.5)", 1, 1, 0.8, 0.9, 2)
 }
 {
 xpanel("RunControl", 0)
@@ -33,30 +24,29 @@ xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 
 runStopIn = 1
 xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
 xbutton("Single Step","steprun()")
-t = 0
+t = 30
 xvalue("t","t", 2 )
 tstop = 30
 xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
-dt = 0.025
+dt = 0.001
 xvalue("dt","dt", 1,"setdt()", 0, 1 )
 steps_per_ms = 40
 xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
 screen_update_invl = 0.05
 xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
-realtime = 1.39
+realtime = 2.83
 xvalue("Real Time","realtime", 0,"", 0, 1 )
-xpanel(517,0)
+xpanel(212,0)
 }
 {
 save_window_ = new Graph(0)
 save_window_.size(0,30,-80,40)
-scene_vector_[4] = save_window_
-{save_window_.view(0, -80, 30, 120, 832, 405, 576.96, 344.32)}
+scene_vector_[5] = save_window_
+{save_window_.view(0, -80, 30, 120, 499, 0, 572.16, 332.8)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
 save_window_.addexpr("v(.5)", 1, 1, 0.8, 0.9, 2)
-save_window_.addexpr("soma.e_extracellular( 0.5 )", 2, 1, 0.8, 0.9, 2)
-save_window_.addexpr("axon.e_extracellular( 0.5 )", 3, 1, 0.8, 0.9, 2)
+save_window_.addexpr("axon.e_extracellular( 0.4 )", 2, 8, 0.8, 0.9, 2)
 }
 objectvar scene_vector_[1]
 {doNotify()}
